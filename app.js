@@ -1,5 +1,6 @@
 var express    = require('express'),
     nodemailer = require('nodemailer'),
+    bodyParser = require('body-parser'),
     port    = process.env.PORT || 3000;
 
 var app     = express(),
@@ -11,11 +12,15 @@ var app     = express(),
       }
     });
 
+app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.post('/email', function(req, res){
   var mailOptions = {
-    from: req.param
+    from: req.body.email.first + ' ' + req.body.email.last + ' <' + req.body.email.email + '>',
+    to: process.env.GMAIL_USER,
+    subject: 'Personal Website Contact',
+    text: req.body.email.message
   };
 
   transporter.sendMail(mailOptions, function(err, response){
