@@ -16,6 +16,7 @@
         email: self.email
       }).then(function(){
         swal("Email Sent", "Your email was successfully sent!", "success");
+        self.email = {};
       }, function(){
         swal("Email Not Sent", "Your email was not succesfully sent!", "error");
       });
