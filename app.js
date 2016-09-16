@@ -1,8 +1,7 @@
 var express    = require('express'),
     nodemailer = require('nodemailer'),
     bodyParser = require('body-parser'),
-    port    = process.env.PORT || 3000,
-    stripe = require('stripe')(process.env.STRIPE_KEY || 'sk_test_NotMzbSgSKFGNc2UhNGQNQmt');
+    port    = process.env.PORT || 3000;
 
 var app     = express(),
     transporter = nodemailer.createTransport({
@@ -26,23 +25,6 @@ app.post('/email', function(req, res){
 
   transporter.sendMail(mailOptions, function(err, response){
     if(err){
-      res.send(500);
-    } else {
-      res.send(200);
-    }
-  });
-});
-
-app.post('/donation', function(req, res){
-  var token = req.body.donation.token;
-  var charge = stripe.charges.create({
-    amount: (req.body.donation.amount * 100),
-    currency: 'usd',
-    source: token,
-    description: 'Campaign Donation'
-  }, function(err, charge){
-    if(err){
-      console.log(err);
       res.send(500);
     } else {
       res.send(200);
