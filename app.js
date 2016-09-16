@@ -3,7 +3,6 @@ var express    = require('express'),
     bodyParser = require('body-parser'),
     port    = process.env.PORT || 3000,
     stripe = require('stripe')(process.env.STRIPE_KEY || 'sk_test_NotMzbSgSKFGNc2UhNGQNQmt');
-    console.log(process.env.STRIPE_KEY);
 
 var app     = express(),
     transporter = nodemailer.createTransport({
