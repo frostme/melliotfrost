@@ -55,3 +55,21 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+.election-p {
+  margin-right: 10px !important;
+  margin-left: 10px !important; 
+  padding-top: 10px;
+  line-height: 1.5
+}
+
+.image-transparent-transition {
+  transition: opacity 2s, margin-left 1s;
+  opacity: 0;
+  margin-left: 500px
+}
+
+.image-transparent-transition.transitioned {
+  opacity: 1;
+  margin-left: 0px;
+}
