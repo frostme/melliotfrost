@@ -1,7 +1,10 @@
 var express    = require('express'),
     nodemailer = require('nodemailer'),
     bodyParser = require('body-parser'),
-    port    = process.env.PORT || 3000;
+    port    = process.env.PORT || 3000,
+  dotenv = require('dotenv');
+
+dotenv();
 
 var app     = express(),
     transporter = nodemailer.createTransport({
@@ -17,23 +20,24 @@ app.use(express.static('public'));
 
 app.post('/email', function(req, res){
   var mailOptions = {
-    from: req.body.email.first + ' ' + req.body.email.last + ' <' + req.body.email.email + '>',
+    from: req.body.name + ' <' + req.body.email + '>',
     to: process.env.GMAIL_USER,
-    subject: 'Personal Website Contact',
-    text: req.body.email.message
+    subject: 'Freelance Website Contact',
+    html: '<strong>Freelance Website Contact</strong><br /><p>Name: ' + req.body.name + '</p><br /><p>Email: ' + req.body.email + '</p><br /><p>Phone: ' + req.body.phone + '</p><br /><p>' + req.body.message + '</p>'
   };
 
   transporter.sendMail(mailOptions, function(err, response){
+    console.log(err);
     if(err){
-      res.send(500);
+      res.sendStatus(500);
     } else {
-      res.send(200);
+      res.sendStatus(200);
     }
   });
 });
 
 app.get('*', function(req, res){
-  res.sendfile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 app.listen(port, function(){
