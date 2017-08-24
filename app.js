@@ -4,7 +4,7 @@ var express    = require('express'),
     port    = process.env.PORT || 3000,
   dotenv = require('dotenv');
 
-dotenv();
+dotenv.config();
 
 var app     = express(),
     transporter = nodemailer.createTransport({
