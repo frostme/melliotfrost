@@ -2,10 +2,12 @@ var express    = require('express'),
     nodemailer = require('nodemailer'),
     bodyParser = require('body-parser'),
     port    = process.env.PORT || 3000,
-  dotenv = require('dotenv');
+  dotenv = require('dotenv'),
+  Hubspot = require('hubspot');
 
 dotenv.config();
 
+var hubspot = new Hubspot({ apiKey: process.env.HUBSPOT_API_KEY});
 var app     = express(),
     transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -27,12 +29,66 @@ app.post('/email', function(req, res){
     html: '<strong>Freelance Website Contact</strong><br /><p>Name: ' + req.body.name + '</p><br /><p>Email: ' + req.body.email + '</p><br /><p>Phone: ' + req.body.phone + '</p><br /><p>' + req.body.message + '</p>'
   };
 
-  transporter.sendMail(mailOptions, function(err, response){
-    if(err){
-      res.sendStatus(500);
-    } else {
-      res.sendStatus(200);
-    }
+  var hubspotOptions = {
+    properties: [
+      {
+        property: 'email',
+        value: req.body.email
+      },
+      {
+        property: 'phone',
+        value: req.body.phone
+      },
+      {
+        property: 'firstname',
+        value: req.body.firstName
+      },
+      {
+        property: 'lastname',
+        value: req.body.lastName
+      },
+      {
+        property: 'ip_address',
+        value: req.body.info.ip
+      },
+      {
+        property: 'ipcity',
+        value: req.body.info.city
+      },
+      {
+        property: 'ipregion',
+        value: req.body.info.region
+      },
+      {
+        property: 'iploc',
+        value: req.body.info.loc
+      },
+      {
+        property: 'ippostal',
+        value: req.body.info.postal
+      }
+    ]
+  };
+
+  hubspot.contacts.create(hubspotOptions).then(results => {
+    transporter.sendMail(mailOptions, function(err, response){
+      if(err){
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(200);
+      }
+    });
+  }, err => {
+    console.log(err);
+    transporter.sendMail(mailOptions, function(err, response){
+      if(err){
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(200);
+      }
+    });
   });
 });
 
