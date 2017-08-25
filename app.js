@@ -15,6 +15,7 @@ var app     = express(),
       }
     });
 
+app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
@@ -27,7 +28,6 @@ app.post('/email', function(req, res){
   };
 
   transporter.sendMail(mailOptions, function(err, response){
-    console.log(err);
     if(err){
       res.sendStatus(500);
     } else {
